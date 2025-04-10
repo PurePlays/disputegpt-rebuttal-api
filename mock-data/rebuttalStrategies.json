@@ -1,0 +1,163 @@
+{
+  "visa": {
+    "13.1": {
+      "commonMerchantRebuttals": [
+        "Merchant provided a tracking number showing delivery",
+        "Customer signed for the package",
+        "Digital goods were fulfilled with download confirmation"
+      ],
+      "strategyTips": [
+        "Dispute delivery signature if it’s unfamiliar or incorrect",
+        "Request shipping proof that matches your actual address",
+        "Include screenshots showing failed delivery or access"
+      ],
+      "evidenceToFocusOn": [
+        "Tracking results",
+        "Carrier delivery status",
+        "Customer affidavit of non-receipt"
+      ]
+    },
+    "13.2": {
+      "commonMerchantRebuttals": [
+        "Customer did not cancel per the merchant’s terms",
+        "Customer accessed service after renewal",
+        "Auto-renewal policy was disclosed"
+      ],
+      "strategyTips": [
+        "Include timestamped proof of cancellation (email or UI)",
+        "Show that the terms were unclear or not easily accessible",
+        "Deny any use of service post-renewal"
+      ],
+      "evidenceToFocusOn": [
+        "Cancellation email",
+        "Terms and conditions screenshot",
+        "Activity logs or lack of use evidence"
+      ]
+    },
+    "13.3": {
+      "commonMerchantRebuttals": [
+        "Product matched description",
+        "Customer didn’t file complaint before dispute",
+        "Item was accepted as-is"
+      ],
+      "strategyTips": [
+        "Show item was misrepresented or defective",
+        "Provide proof of attempts to resolve with merchant",
+        "Include comparison of advertised vs. received product"
+      ],
+      "evidenceToFocusOn": [
+        "Photos or videos",
+        "Chat/email trail",
+        "Product listing screenshots"
+      ]
+    }
+  },
+  "mastercard": {
+    "4853": {
+      "commonMerchantRebuttals": [
+        "Customer did not cancel properly",
+        "Service was used post-cancellation",
+        "No proof customer attempted to cancel"
+      ],
+      "strategyTips": [
+        "Show proof of cancellation steps",
+        "Attach unclear cancellation policy",
+        "Add logs showing lack of use"
+      ],
+      "evidenceToFocusOn": [
+        "Email/chat confirmation",
+        "Merchant terms",
+        "Account activity logs"
+      ]
+    },
+    "4837": {
+      "commonMerchantRebuttals": [
+        "Transaction was authorized with 3DS or OTP",
+        "IP address matched customer",
+        "Trusted device used"
+      ],
+      "strategyTips": [
+        "Challenge tech reliance — spoofed or compromised login",
+        "Highlight no physical or digital access",
+        "Include police/fraud report if applicable"
+      ],
+      "evidenceToFocusOn": [
+        "Fraud affidavit",
+        "IP/device mismatch",
+        "Proof of non-authorization"
+      ]
+    }
+  },
+  "amex": {
+    "C04": {
+      "commonMerchantRebuttals": [
+        "Cancellation not received",
+        "Refund window expired",
+        "Non-refundable purchase"
+      ],
+      "strategyTips": [
+        "Show on-time cancellation attempt",
+        "Point out lack of clear refund policy",
+        "Include goodwill attempt to resolve"
+      ],
+      "evidenceToFocusOn": [
+        "Cancellation email or chat",
+        "Refund policy screenshot",
+        "Proof of non-use"
+      ]
+    },
+    "C31": {
+      "commonMerchantRebuttals": [
+        "Goods were delivered or picked up",
+        "Merchant shows confirmed delivery",
+        "Digital service accessed"
+      ],
+      "strategyTips": [
+        "Challenge delivery legitimacy",
+        "Provide logs showing no access",
+        "Dispute use of service"
+      ],
+      "evidenceToFocusOn": [
+        "Delivery records",
+        "Access logs",
+        "Customer statement"
+      ]
+    }
+  },
+  "discover": {
+    "AA": {
+      "commonMerchantRebuttals": [
+        "Customer authorized transaction",
+        "Billing/shipping matched",
+        "Card not reported lost/stolen"
+      ],
+      "strategyTips": [
+        "Emphasize unauthorized use",
+        "Disavow knowledge of merchant",
+        "Submit fraud or police report"
+      ],
+      "evidenceToFocusOn": [
+        "Affidavit of unauthorized use",
+        "Bank fraud report",
+        "Geo/IP mismatch"
+      ]
+    },
+    "AP": {
+      "commonMerchantRebuttals": [
+        "Return not received",
+        "Item was damaged or used",
+        "Restocking fee applies"
+      ],
+      "strategyTips": [
+        "Show return tracking or confirmation",
+        "Include photos before return",
+        "Challenge unclear restocking fees"
+      ],
+      "evidenceToFocusOn": [
+        "Return shipping receipt",
+        "Photos of item",
+        "Merchant return policy"
+      ]
+    }
+  }
+}
