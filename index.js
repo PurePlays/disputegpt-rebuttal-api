@@ -17,7 +17,11 @@ app.post("/rebuttal/strategy", (req, res) => {
     return res.status(404).json({ message: "No rebuttal strategy found for that reason code." });
   }
 
-  res.json(data);
+  res.json({
+    ...data,
+    customerStrategy: data.customerStrategy || "Emphasize your version of events and provide evidence that contradicts the merchant's claims."
+  });
+  
 });
 
 app.get("/", (req, res) => {

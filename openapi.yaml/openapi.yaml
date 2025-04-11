@@ -1,0 +1,381 @@
+openapi: 3.1.0
+info:
+  title: DisputeGPT API
+  version: 1.2.0
+  description: >
+    This API powers DisputeGPT — a dispute resolution assistant that helps consumers file and manage chargebacks across Visa, Mastercard, Amex, and Discover.
+    Includes support for reason code breakdowns, issuer contact retrieval, evidence builders, BIN lookups, rebuttal strategies, dispute letter generation, and success rate estimation.
+
+servers:
+  - url: https://api.disputegpt.com
+    description: Primary API for DisputeGPT
+  - url: https://disputegpt-rebuttal-api.onrender.com
+    description: Rebuttal Strategy API
+
+paths:
+  /issuers/{issuer}/contact:
+    get:
+      operationId: getIssuerContact
+      summary: Get dispute contact info for a credit card issuer.
+      parameters:
+        - name: issuer
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Contact info returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuer:
+                    type: string
+                  phoneSupport:
+                    type: string
+                    nullable: true
+                  fax:
+                    type: string
+                    nullable: true
+                  uploadPortal:
+                    type: string
+                    format: uri
+                    nullable: true
+                  mailingAddress:
+                    type: string
+                  submissionNotes:
+                    type: array
+                    items:
+                      type: string
+
+  /reasons/{network}/{code}:
+    get:
+      operationId: getReasonCodeDetails
+      summary: Get reason code rules and evidence for a specific card network
+      parameters:
+        - name: network
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [visa, mastercard, amex, discover]
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reason code details and required evidence
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reasonCode:
+                    type: string
+                  description:
+                    type: string
+                  evidenceRequirements:
+                    type: array
+                    items:
+                      type: string
+                  maxDisputeWindow:
+                    type: string
+                    example: "120 days"
+
+  /builder/evidence-packet:
+    post:
+      operationId: buildEvidencePacket
+      summary: Generate an evidence packet based on transaction data and reason code.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                network:
+                  type: string
+                  enum: [visa, mastercard, amex, discover]
+                reasonCode:
+                  type: string
+                transactionAmount:
+                  type: number
+                transactionDate:
+                  type: string
+                  format: date
+                last4CardDigits:
+                  type: string
+                billingAddress:
+                  type: string
+                shippingAddress:
+                  type: string
+                deliveryMethod:
+                  type: string
+                  enum: [physical, digital, email, pickup, unknown]
+                trackingNumber:
+                  type: string
+                  nullable: true
+                avsResult:
+                  type: string
+                  nullable: true
+                ipAddress:
+                  type: string
+                  nullable: true
+                deviceInfo:
+                  type: string
+                  nullable: true
+                postTransactionEmails:
+                  type: array
+                  items:
+                    type: string
+                activityLog:
+                  type: string
+                satisfactionConfirmation:
+                  type: string
+                  nullable: true
+                authorizedUserEvidence:
+                  type: string
+                  nullable: true
+                signedContract:
+                  type: string
+                  nullable: true
+                orderForm:
+                  type: string
+                  nullable: true
+                merchantResponse:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Returns a structured packet with suggested evidence and format
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  compiledEvidence:
+                    type: array
+                    items:
+                      type: string
+                  submissionTips:
+                    type: array
+                    items:
+                      type: string
+                  estimatedSuccessRate:
+                    type: number
+                    example: 0.82
+
+  /bins/{bin}:
+    get:
+      operationId: resolveBinToIssuer
+      summary: Identify the card network and issuer from a 6-digit BIN.
+      parameters:
+        - name: bin
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{6}$'
+      responses:
+        '200':
+          description: Card metadata from BIN lookup
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bin:
+                    type: string
+                  network:
+                    type: string
+                  issuer:
+                    type: string
+                  cardType:
+                    type: string
+                  cardSubType:
+                    type: string
+                  country:
+                    type: string
+
+  /reasons/lookup:
+    get:
+      operationId: lookupReasonCodeByScenario
+      summary: Suggest a reason code based on user scenario and card network
+      parameters:
+        - name: network
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [visa, mastercard, amex, discover]
+        - name: scenario
+          in: query
+          required: true
+          schema:
+            type: string
+            description: e.g. "item not received", "unauthorized transaction"
+      responses:
+        '200':
+          description: Matched reason code and context
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reasonCode:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  network:
+                    type: string
+
+  /disputes/estimate-success:
+    post:
+      operationId: estimateDisputeSuccess
+      summary: Estimate success rate for a dispute based on key inputs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                network:
+                  type: string
+                reasonCode:
+                  type: string
+                merchantResponse:
+                  type: string
+                consumerEvidence:
+                  type: string
+                transactionAmount:
+                  type: number
+                priorAttemptsToResolve:
+                  type: boolean
+                  nullable: true
+      responses:
+        '200':
+          description: Estimated success rate and reasoning
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estimatedSuccessRate:
+                    type: number
+                    example: 0.76
+                  rationale:
+                    type: string
+
+  /letter/generate:
+    post:
+      operationId: generateDisputeLetter
+      summary: Generate a formatted dispute letter based on provided context.
+      description: Creates a personalized dispute letter with regulation references and tone selection.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - network
+                - reasonCode
+                - cardholderName
+                - issuer
+                - statementDate
+                - transactionAmount
+                - transactionDate
+                - merchantName
+                - disputeSummary
+              properties:
+                network:
+                  type: string
+                  enum: [visa, mastercard, amex, discover]
+                reasonCode:
+                  type: string
+                cardholderName:
+                  type: string
+                issuer:
+                  type: string
+                statementDate:
+                  type: string
+                  format: date
+                transactionAmount:
+                  type: number
+                transactionDate:
+                  type: string
+                  format: date
+                merchantName:
+                  type: string
+                disputeSummary:
+                  type: string
+                preferredTone:
+                  type: string
+                  enum: [formal, assertive, polite]
+                  default: formal
+                includeRegulation:
+                  type: boolean
+                  default: true
+      responses:
+        '200':
+          description: Returns the fully formatted dispute letter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  letterText:
+                    type: string
+                  recommendedSubjectLine:
+                    type: string
+                  includeAddressBlock:
+                    type: boolean
+
+  /rebuttal/strategy:
+    post:
+      operationId: getRebuttalStrategy
+      summary: Get rebuttal strategies based on card network and reason code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - network
+                - reasonCode
+              properties:
+                network:
+                  type: string
+                  enum: [visa, mastercard, amex, discover]
+                reasonCode:
+                  type: string
+      responses:
+        '200':
+          description: Strategy suggestions including rebuttal logic and evidence focus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  commonMerchantRebuttals:
+                    type: array
+                    items:
+                      type: string
+                  strategyTips:
+                    type: array
+                    items:
+                      type: string
+                  evidenceToFocusOn:
+                    type: array
+                    items:
+                      type: string
+                  customerStrategy:
+                    type: string
