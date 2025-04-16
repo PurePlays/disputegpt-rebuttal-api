@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "WinMyDispute GPT",
+  "name_for_model": "winmydispute_gpt",
+  "description_for_human": "Dispute generator, strategy builder, and chargeback automation assistant.",
+  "description_for_model": "Helps users generate chargeback letters, evidence packets, and counter merchant rebuttals.",
+  "auth": { "type": "none" },
+  "api": {
+    "type": "openapi",
+    "url": "https://disputegpt-rebuttal-api.onrender.com/openapi.yaml"
+  },
+  "logo_url": "https://winthisdispute.com/logo.png",
+  "contact_email": "support@winthisdispute.com",
+  "legal_info_url": "https://pure-plays.com/terms",
+  "license": "Proprietary — © Daniel Neville & PurePlays. All rights reserved. Unauthorized use prohibited."
+}
+
+

@@ -1,0 +1,450 @@
+openapi: 3.1.0
+info:
+  title: WinMyDispute GPT API
+  version: 2.1.0
+  description: >
+    This API powers WinMyDispute GPT — a strategic, legally-informed assistant to help U.S. consumers win credit card chargebacks across all major networks.
+    Built by Daniel Neville and PurePlays. All rights reserved.
+  contact:
+    name: Daniel Neville
+    url: https://pure-plays.com
+    email: support@winthisdispute.com
+  termsOfService: https://pure-plays.com/terms
+  x-copyright:
+    holder: Daniel Neville / PurePlays
+    year: 2025
+    notice: >
+      This API and its OpenAPI schema are proprietary intellectual property,
+      created and owned by Daniel Neville and PurePlays. Reuse, reproduction,
+      or commercial adaptation without express permission is prohibited.
+      All rights reserved under U.S. copyright and trade law.
+
+servers:
+  - url: https://disputegpt-rebuttal-api.onrender.com
+    description: Live backend (Render)
+
+paths:
+  /bins/{bin}:
+    get:
+      operationId: resolveBinToIssuer
+      summary: Identify the issuer and card network from a BIN.
+      parameters:
+        - name: bin
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: '^\d{6}$'
+      responses:
+        '200':
+          description: Card metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bin:
+                    type: string
+                  network:
+                    type: string
+                  issuer:
+                    type: string
+                  cardType:
+                    type: string
+                  cardSubType:
+                    type: string
+                  country:
+                    type: string
+
+  /issuers/{issuer}/contact:
+    get:
+      operationId: getIssuerContact
+      summary: Get dispute contact info for a credit card issuer.
+      parameters:
+        - name: issuer
+          in: path
+          required: true
+          schema:
+            type: string
+            example: Chase
+      responses:
+        '200':
+          description: Issuer contact details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  issuer:
+                    type: string
+                  phoneSupport:
+                    type: string
+                    nullable: true
+                  fax:
+                    type: string
+                    nullable: true
+                  uploadPortal:
+                    type: string
+                    format: uri
+                    nullable: true
+                  mailingAddress:
+                    type: string
+                  submissionNotes:
+                    type: array
+                    items:
+                      type: string
+
+  /reasons/lookup:
+    get:
+      operationId: lookupReasonCodeByScenario
+      summary: Suggest a reason code based on the user's scenario.
+      parameters:
+        - name: network
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [visa, mastercard, amex, discover]
+        - name: scenario
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Best-matching reason code
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reasonCode:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  network:
+                    type: string
+
+  /reasons/{network}/{code}:
+    get:
+      operationId: getReasonCodeDetails
+      summary: Get official rules for a chargeback reason code.
+      parameters:
+        - name: network
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "13.1"
+      responses:
+        '200':
+          description: Rulebook summary and required evidence
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reasonCode:
+                    type: string
+                  description:
+                    type: string
+                  evidenceRequirements:
+                    type: array
+                    items:
+                      type: string
+                  maxDisputeWindow:
+                    type: string
+                    example: "120 days"
+
+  /builder/evidence-packet:
+    post:
+      operationId: buildEvidencePacket
+      summary: Generate a chargeback evidence checklist.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                network:
+                  type: string
+                  enum: [visa, mastercard, amex, discover]
+                reasonCode:
+                  type: string
+                transactionAmount:
+                  type: number
+                transactionDate:
+                  type: string
+                  format: date
+                last4CardDigits:
+                  type: string
+                billingAddress:
+                  type: string
+                shippingAddress:
+                  type: string
+                deliveryMethod:
+                  type: string
+                  enum: [physical, digital, email, pickup, unknown]
+                trackingNumber:
+                  type: string
+                  nullable: true
+                avsResult:
+                  type: string
+                  nullable: true
+                ipAddress:
+                  type: string
+                  nullable: true
+                deviceInfo:
+                  type: string
+                  nullable: true
+                postTransactionEmails:
+                  type: array
+                  items:
+                    type: string
+                activityLog:
+                  type: string
+                satisfactionConfirmation:
+                  type: string
+                  nullable: true
+                authorizedUserEvidence:
+                  type: string
+                  nullable: true
+                signedContract:
+                  type: string
+                  nullable: true
+                orderForm:
+                  type: string
+                  nullable: true
+                merchantResponse:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Structured evidence packet
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  compiledEvidence:
+                    type: array
+                    items:
+                      type: string
+                  submissionTips:
+                    type: array
+                    items:
+                      type: string
+                  estimatedSuccessRate:
+                    type: number
+                    example: 0.85
+
+  /letter/generate:
+    post:
+      operationId: generateDisputeLetter
+      summary: Generate a personalized, formatted dispute letter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - network
+                - reasonCode
+                - cardholderName
+                - issuer
+                - statementDate
+                - transactionAmount
+                - transactionDate
+                - merchantName
+                - disputeSummary
+              properties:
+                network:
+                  type: string
+                  enum: [visa, mastercard, amex, discover]
+                reasonCode:
+                  type: string
+                cardholderName:
+                  type: string
+                issuer:
+                  type: string
+                statementDate:
+                  type: string
+                  format: date
+                transactionAmount:
+                  type: number
+                transactionDate:
+                  type: string
+                  format: date
+                merchantName:
+                  type: string
+                disputeSummary:
+                  type: string
+                preferredTone:
+                  type: string
+                  enum: [formal, assertive, polite]
+                  default: formal
+                includeRegulation:
+                  type: boolean
+                  default: true
+      responses:
+        '200':
+          description: Dispute letter output
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  letterText:
+                    type: string
+                  recommendedSubjectLine:
+                    type: string
+                  letterPdfUrl:
+                    type: string
+                    format: uri
+
+  /letter/download:
+    post:
+      operationId: downloadDisputeLetter
+      summary: Return a downloadable PDF version of the letter.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - letterHtml
+              properties:
+                letterHtml:
+                  type: string
+      responses:
+        '200':
+          description: Download URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  downloadUrl:
+                    type: string
+                    format: uri
+
+  /disputes/estimate-success:
+    post:
+      operationId: estimateDisputeSuccess
+      summary: Predict the likelihood of dispute success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                network:
+                  type: string
+                reasonCode:
+                  type: string
+                merchantResponse:
+                  type: string
+                consumerEvidence:
+                  type: string
+                transactionAmount:
+                  type: number
+                priorAttemptsToResolve:
+                  type: boolean
+      responses:
+        '200':
+          description: Estimated success rate and rationale
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  estimatedSuccessRate:
+                    type: number
+                  rationale:
+                    type: string
+
+  /rebuttal/strategy:
+    post:
+      operationId: getRebuttalStrategy
+      summary: Show merchant rebuttal tactics and how to beat them.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                network:
+                  type: string
+                reasonCode:
+                  type: string
+                merchantType:
+                  type: string
+      responses:
+        '200':
+          description: Rebuttal strategy response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  merchantArguments:
+                    type: array
+                    items:
+                      type: string
+                  rebuttalTips:
+                    type: array
+                    items:
+                      type: string
+                  customerStrategy:
+                    type: array
+                    items:
+                      type: string
+
+  /cfpb/complaint-summary:
+    post:
+      operationId: generateCfpbComplaintSummary
+      summary: Generate a CFPB complaint summary after dispute failure.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                network:
+                  type: string
+                issuer:
+                  type: string
+                transaction:
+                  type: object
+                  properties:
+                    date:
+                      type: string
+                    amount:
+                      type: number
+                    merchant:
+                      type: string
+                summary:
+                  type: string
+      responses:
+        '200':
+          description: Complaint summary generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  summary:
+                    type: string

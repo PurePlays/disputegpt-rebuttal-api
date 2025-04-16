@@ -1,0 +1,154 @@
+{
+  "visa": {
+    "13.1": {
+      "commonMerchantRebuttals": [
+        "Delivery was confirmed",
+        "Digital service was accessed",
+        "Pickup was signed for"
+      ],
+      "strategyTips": [
+        "Challenge delivery proof (wrong address, timing)",
+        "Claim no digital access occurred",
+        "Emphasize item never arrived or was inaccessible"
+      ],
+      "evidenceToFocusOn": [
+        "Tracking discrepancies",
+        "Delivery date vs. claim date",
+        "System access logs"
+      ],
+      "customerStrategy": "Highlight that you never received the item or service. Challenge delivery confirmation with any mismatches in address or signature, and show you contacted the merchant before disputing."
+    },
+    "13.2": {
+      "commonMerchantRebuttals": [
+        "Service was accessible",
+        "Cancellation terms were clear",
+        "Customer did not cancel"
+      ],
+      "strategyTips": [
+        "Show that cancellation was attempted",
+        "Prove unclear or hard-to-find terms",
+        "Demonstrate lack of usage after renewal"
+      ],
+      "evidenceToFocusOn": [
+        "Screenshots of cancellation",
+        "Emails to support",
+        "Login/activity logs"
+      ],
+      "customerStrategy": "Emphasize your cancellation attempts, any confusing or hidden policies, and show that you didn't use the service after the renewal date. Use timestamps to your advantage."
+    },
+    "13.3": {
+      "commonMerchantRebuttals": [
+        "Product matched description",
+        "Customer didn't raise issues before disputing",
+        "No defects reported"
+      ],
+      "strategyTips": [
+        "Document differences between what was advertised vs received",
+        "Show early attempts to return or resolve",
+        "Demonstrate quality or usability issues"
+      ],
+      "evidenceToFocusOn": [
+        "Photos/videos of item",
+        "Product description",
+        "Email/chat with merchant"
+      ],
+      "customerStrategy": "Include side-by-side comparisons and clearly point out misrepresentation. The goal is to show that the merchant misled you and you tried resolving it first."
+    },
+    "10.4": {
+      "commonMerchantRebuttals": [
+        "IP address matched customer location",
+        "AVS/CVV matched",
+        "Past purchases on file"
+      ],
+      "strategyTips": [
+        "Note IP address inconsistency if any",
+        "Show card was stolen, compromised, or used without your knowledge",
+        "Indicate lack of past relationship with merchant"
+      ],
+      "evidenceToFocusOn": [
+        "Fraud report filed",
+        "Bank communication",
+        "Statement screenshots"
+      ],
+      "customerStrategy": "Stress that this charge was unauthorized, and you didn’t benefit from it. Include fraud report or any alerts issued by your bank."
+    }
+  },
+  "mastercard": {
+    "4853": {
+      "commonMerchantRebuttals": [
+        "Customer did not cancel properly",
+        "Cancellation terms were posted",
+        "Customer used service"
+      ],
+      "strategyTips": [
+        "Show cancellation steps were followed",
+        "Prove post-cancellation usage didn’t occur",
+        "Point out confusion in terms"
+      ],
+      "evidenceToFocusOn": [
+        "Cancellation screenshots",
+        "Timeline of events",
+        "Usage history"
+      ],
+      "customerStrategy": "Highlight that you followed their instructions and still got charged. Include timestamps, show no usage after the cancellation, and challenge how clear the terms were."
+    },
+    "4837": {
+      "commonMerchantRebuttals": [
+        "Product was custom or final sale",
+        "Customer didn’t follow return process",
+        "No complaint was filed"
+      ],
+      "strategyTips": [
+        "Emphasize misleading or vague return policies",
+        "Show defects or misrepresentation",
+        "Include proof of contact attempts"
+      ],
+      "evidenceToFocusOn": [
+        "Photos of damaged/incorrect item",
+        "Merchant's policy text",
+        "Support emails"
+      ],
+      "customerStrategy": "Argue that the item wasn’t what was promised or was defective. Support this with photos, and show that you tried to contact the seller or return the item."
+    }
+  },
+  "amex": {
+    "C08": {
+      "commonMerchantRebuttals": [
+        "Goods/services were provided",
+        "No refund due per policy",
+        "Signed agreement by cardholder"
+      ],
+      "strategyTips": [
+        "Prove goods/services weren’t received",
+        "Show cancellation attempts",
+        "Cite misleading or confusing policy"
+      ],
+      "evidenceToFocusOn": [
+        "Proof of non-receipt",
+        "Cancellation communication",
+        "Contract fine print"
+      ],
+      "customerStrategy": "Show that the merchant’s promise wasn’t kept and their policy was confusing or misrepresented. Include screenshots of policies and attempts to get help or cancel."
+    }
+  },
+  "discover": {
+    "RG": {
+      "commonMerchantRebuttals": [
+        "Services rendered as agreed",
+        "Digital item accessed",
+        "Customer agreed to terms"
+      ],
+      "strategyTips": [
+        "Prove service was never used or was inaccessible",
+        "Show lack of consent to terms",
+        "Dispute any auto-renewals with unclear disclosures"
+      ],
+      "evidenceToFocusOn": [
+        "Login logs",
+        "Emails or chats",
+        "Screenshots of misleading terms"
+      ],
+      "customerStrategy": "Make the case that you didn’t access or benefit from the service, and show the merchant made it unclear or hard to cancel or opt out."
+    }
+  }
+}
