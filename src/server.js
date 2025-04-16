@@ -126,8 +126,13 @@ app.post('/letter/download', (req, res) => {
 });
 
 app.use('/terms', express.static(path.join(__dirname, 'static')));
-app.use('/.well-known', express.static(path.join(__dirname, 'static/.well-known')));
-app.use('/', express.static(path.join(__dirname, 'static')));
+
+app.get('/openapi.yaml', (req, res) => {
+  res.sendFile(path.join(__dirname, 'openapi.yaml'));
+});
+app.get('/.well-known/ai-plugin.json', (req, res) => {
+  res.sendFile(path.join(__dirname, '.well-known/ai-plugin.json'));
+});
 
 module.exports = app;
 
