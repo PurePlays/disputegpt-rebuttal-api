@@ -24,6 +24,59 @@ servers:
     description: Live backend (Render)
 
 paths:
+  /meta/capabilities:
+    get:
+      operationId: getCapabilities
+      summary: Return API capability matrix and runtime tuning values.
+      responses:
+        '200':
+          description: Capability payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  service:
+                    type: string
+                  capabilities:
+                    type: array
+                    items:
+                      type: string
+                  performance:
+                    type: object
+                    properties:
+                      cacheTtlMs:
+                        type: integer
+                      rateLimitProfiles:
+                        type: object
+
+  /meta/schema:
+    get:
+      operationId: getSchemaMetadata
+      summary: Return canonical dispute schema metadata and health.
+      responses:
+        '200':
+          description: Schema metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schemaVersion:
+                    type: string
+                  networks:
+                    type: array
+                    items:
+                      type: string
+                  scenarioCount:
+                    type: integer
+                  reasonCodeCount:
+                    type: integer
+                  schemaErrors:
+                    type: array
+                    items:
+                      type: string
+
   /bins/{bin}:
     get:
       operationId: resolveBinToIssuer
@@ -314,7 +367,7 @@ paths:
   /letter/download:
     post:
       operationId: downloadDisputeLetter
-      summary: Return a downloadable PDF version of the letter.
+      summary: Return a downloadable PDF version of the generated letter.
       requestBody:
         required: true
         content:
@@ -322,21 +375,22 @@ paths:
             schema:
               type: object
               required:
-                - letterHtml
+                - letterText
               properties:
-                letterHtml:
+                letterText:
+                  type: string
+                cardholderName:
+                  type: string
+                merchantName:
                   type: string
       responses:
         '200':
-          description: Download URL
+          description: PDF binary stream
           content:
-            application/json:
+            application/pdf:
               schema:
-                type: object
-                properties:
-                  downloadUrl:
-                    type: string
-                    format: uri
+                type: string
+                format: binary
 
   /disputes/estimate-success:
     post:
@@ -389,7 +443,7 @@ paths:
                   type: string
                 reasonCode:
                   type: string
-                merchantType:
+                code:
                   type: string
       responses:
         '200':
@@ -408,9 +462,7 @@ paths:
                     items:
                       type: string
                   customerStrategy:
-                    type: array
-                    items:
-                      type: string
+                    type: string
 
   /cfpb/complaint-summary:
     post:
