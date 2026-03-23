@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "2026-03-23.1",
+  "scenarios": {
+    "unauthorized": {
+      "label": "Unauthorized / fraud",
+      "networks": {
+        "visa": { "code": "10.4", "title": "Other Fraud—Card-Absent Environment", "description": "Transaction not authorized by cardholder." },
+        "mastercard": { "code": "4837", "title": "No Cardholder Authorization", "description": "Cardholder did not authorize the transaction." },
+        "amex": { "code": "C08", "title": "Goods/Services Not Received", "description": "Commonly paired when delivery cannot be validated." },
+        "discover": { "code": "RG", "title": "Cardholder Dispute", "description": "Service or charge is disputed by cardholder." }
+      }
+    },
+    "not_received": {
+      "label": "Goods/services not received",
+      "networks": {
+        "visa": { "code": "13.1", "title": "Merchandise/Services Not Received", "description": "Goods/services not delivered as promised." },
+        "mastercard": { "code": "4853", "title": "Cardholder Dispute", "description": "Cardholder indicates expected services were not provided." },
+        "amex": { "code": "C08", "title": "Goods/Services Not Received", "description": "Cardholder did not receive goods or services." },
+        "discover": { "code": "RG", "title": "Cardholder Dispute", "description": "Goods/services dispute with merchant." }
+      }
+    },
+    "canceled": {
+      "label": "Canceled recurring transaction",
+      "networks": {
+        "visa": { "code": "13.2", "title": "Canceled Recurring Transaction", "description": "Transaction continued after cancellation." },
+        "mastercard": { "code": "4853", "title": "Cardholder Dispute", "description": "Canceled service but still charged." },
+        "amex": { "code": "C08", "title": "Canceled Services", "description": "Cardholder canceled but was billed anyway." },
+        "discover": { "code": "RG", "title": "Cardholder Dispute", "description": "Cancellation not respected by merchant." }
+      }
+    }
+  },
+  "networks": {
+    "visa": {
+      "reasonCodes": {
+        "13.1": {
+          "title": "Merchandise/Services Not Received",
+          "description": "Goods/services not delivered as promised.",
+          "commonMerchantRebuttals": ["Delivery was confirmed", "Digital service was accessed", "Pickup was signed for"],
+          "strategyTips": ["Challenge delivery proof (wrong address, timing)", "Claim no digital access occurred", "Emphasize item never arrived or was inaccessible"],
+          "evidenceToFocusOn": ["Tracking discrepancies", "Delivery date vs. claim date", "System access logs"],
+          "customerStrategy": "Highlight that you never received the item or service. Challenge delivery confirmation with any mismatches in address or signature, and show you contacted the merchant before disputing.",
+          "maxDisputeWindow": "Typically up to 120 days depending on issuer policy."
+        },
+        "13.2": {
+          "title": "Canceled Recurring Transaction",
+          "description": "Transaction continued after cancellation.",
+          "commonMerchantRebuttals": ["Service was accessible", "Cancellation terms were clear", "Customer did not cancel"],
+          "strategyTips": ["Show that cancellation was attempted", "Prove unclear or hard-to-find terms", "Demonstrate lack of usage after renewal"],
+          "evidenceToFocusOn": ["Screenshots of cancellation", "Emails to support", "Login/activity logs"],
+          "customerStrategy": "Emphasize your cancellation attempts, any confusing or hidden policies, and show that you didn't use the service after the renewal date. Use timestamps to your advantage.",
+          "maxDisputeWindow": "Typically up to 120 days depending on issuer policy."
+        },
+        "13.3": {
+          "title": "Not as Described or Defective",
+          "description": "Product or service materially differs from what was represented.",
+          "commonMerchantRebuttals": ["Product matched description", "Customer didn't raise issues before disputing", "No defects reported"],
+          "strategyTips": ["Document differences between what was advertised vs received", "Show early attempts to return or resolve", "Demonstrate quality or usability issues"],
+          "evidenceToFocusOn": ["Photos/videos of item", "Product description", "Email/chat with merchant"],
+          "customerStrategy": "Include side-by-side comparisons and clearly point out misrepresentation. The goal is to show that the merchant misled you and you tried resolving it first.",
+          "maxDisputeWindow": "Typically up to 120 days depending on issuer policy."
+        },
+        "10.4": {
+          "title": "Other Fraud—Card-Absent Environment",
+          "description": "Transaction not authorized by cardholder.",
+          "commonMerchantRebuttals": ["IP address matched customer location", "AVS/CVV matched", "Past purchases on file"],
+          "strategyTips": ["Note IP address inconsistency if any", "Show card was stolen, compromised, or used without your knowledge", "Indicate lack of past relationship with merchant"],
+          "evidenceToFocusOn": ["Fraud report filed", "Bank communication", "Statement screenshots"],
+          "customerStrategy": "Stress that this charge was unauthorized, and you didn’t benefit from it. Include fraud report or any alerts issued by your bank.",
+          "maxDisputeWindow": "Typically up to 120 days depending on issuer policy."
+        }
+      }
+    },
+    "mastercard": {
+      "reasonCodes": {
+        "4853": {
+          "title": "Cardholder Dispute",
+          "description": "Service cancellation or non-receipt dispute.",
+          "commonMerchantRebuttals": ["Customer did not cancel properly", "Cancellation terms were posted", "Customer used service"],
+          "strategyTips": ["Show cancellation steps were followed", "Prove post-cancellation usage didn’t occur", "Point out confusion in terms"],
+          "evidenceToFocusOn": ["Cancellation screenshots", "Timeline of events", "Usage history"],
+          "customerStrategy": "Highlight that you followed their instructions and still got charged. Include timestamps, show no usage after the cancellation, and challenge how clear the terms were.",
+          "maxDisputeWindow": "Typically up to 120 days depending on issuer policy."
+        },
+        "4837": {
+          "title": "No Cardholder Authorization",
+          "description": "Unauthorized or misrepresented transaction.",
+          "commonMerchantRebuttals": ["Product was custom or final sale", "Customer didn’t follow return process", "No complaint was filed"],
+          "strategyTips": ["Emphasize misleading or vague return policies", "Show defects or misrepresentation", "Include proof of contact attempts"],
+          "evidenceToFocusOn": ["Photos of damaged/incorrect item", "Merchant's policy text", "Support emails"],
+          "customerStrategy": "Argue that the item wasn’t what was promised or was defective. Support this with photos, and show that you tried to contact the seller or return the item.",
+          "maxDisputeWindow": "Typically up to 120 days depending on issuer policy."
+        }
+      }
+    },
+    "amex": {
+      "reasonCodes": {
+        "C08": {
+          "title": "Goods/Services Not Received",
+          "description": "Goods/services not received or canceled as promised.",
+          "commonMerchantRebuttals": ["Goods/services were provided", "No refund due per policy", "Signed agreement by cardholder"],
+          "strategyTips": ["Prove goods/services weren’t received", "Show cancellation attempts", "Cite misleading or confusing policy"],
+          "evidenceToFocusOn": ["Proof of non-receipt", "Cancellation communication", "Contract fine print"],
+          "customerStrategy": "Show that the merchant’s promise wasn’t kept and their policy was confusing or misrepresented. Include screenshots of policies and attempts to get help or cancel.",
+          "maxDisputeWindow": "Typically up to 120 days depending on issuer policy."
+        }
+      }
+    },
+    "discover": {
+      "reasonCodes": {
+        "RG": {
+          "title": "Cardholder Dispute",
+          "description": "General cardholder dispute category.",
+          "commonMerchantRebuttals": ["Services rendered as agreed", "Digital item accessed", "Customer agreed to terms"],
+          "strategyTips": ["Prove service was never used or was inaccessible", "Show lack of consent to terms", "Dispute any auto-renewals with unclear disclosures"],
+          "evidenceToFocusOn": ["Login logs", "Emails or chats", "Screenshots of misleading terms"],
+          "customerStrategy": "Make the case that you didn’t access or benefit from the service, and show the merchant made it unclear or hard to cancel or opt out.",
+          "maxDisputeWindow": "Typically up to 120 days depending on issuer policy."
+        }
+      }
+    }
+  },
+  "bins": {
+    "414720": {
+      "network": "visa",
+      "issuer": "Chase",
+      "cardType": "credit",
+      "cardSubType": "consumer",
+      "country": "US"
+    },
+    "540805": {
+      "network": "mastercard",
+      "issuer": "Capital One",
+      "cardType": "credit",
+      "cardSubType": "consumer",
+      "country": "US"
+    }
+  },
+  "issuers": {
+    "chase": {
+      "name": "Chase",
+      "contact": {
+        "phoneSupport": "1-800-432-3117",
+        "fax": null,
+        "uploadPortal": "https://www.chase.com/personal/credit-cards/dispute",
+        "mailingAddress": "P.O. Box 15298, Wilmington, DE 19850",
+        "submissionNotes": [
+          "Include dispute reference number from online claim.",
+          "Attach timeline and merchant communications in chronological order."
+        ]
+      }
+    },
+    "capital one": {
+      "name": "Capital One",
+      "contact": {
+        "phoneSupport": "1-800-227-4825",
+        "fax": null,
+        "uploadPortal": "https://www.capitalone.com/help-center/credit-cards/dispute-transaction/",
+        "mailingAddress": "P.O. Box 30285, Salt Lake City, UT 84130",
+        "submissionNotes": [
+          "Upload evidence as PDF when possible.",
+          "Cite the charge date and posted date if both are visible."
+        ]
+      }
+    }
+  }
+}
